@@ -6,7 +6,7 @@ from decor import decorTraining
 
 
 class Breeder:
-    countParents = 25
+    countParents = 15
     countChildren = 3
 
     def evolutionLearn(self, neuralNetwork: NeuralNetwork, trainingInput, trainingOutput, count: int = 100):
@@ -26,13 +26,7 @@ class Breeder:
 
     @staticmethod
     def mutationGeneration(parents: list):
-        generation = []
-        for p in parents:
-            for i in range(Breeder.countChildren):
-                NN = p.copy()
-                NN.mutation()
-                generation.append(NN)
-        return generation
+        return [p.copy().mutation() for i in range(Breeder.countChildren) for p in parents]
 
     @decorTraining
     def training(self, generation, trainingInputs, trainingOutputs, count: int):
@@ -53,9 +47,8 @@ class Breeder:
     @staticmethod
     def checkLoss(result, trainingOutputs):
         error = (result - trainingOutputs) ** 2
-        return np.sum(error)
+        return np.sum(error) / error.size
 
     @staticmethod
     def loss(network):
         return network.loss
-

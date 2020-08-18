@@ -104,8 +104,10 @@ class NeuralNetwork:
             for i in range(self.lenLayer(l)):
                 if random.random() < 0.5:
                     w = np.copy(self.layer(l)[i].weights)
-                    mutantW = (2 * np.random.sample(w.shape) - 1)
+                    mutantW = ((2 * np.random.sample(w.shape)) - 1) / 10
                     self.layer(l)[i].weights = np.copy(w + mutantW)
+
+        return self
 
     def structure(self):
         return [len(layer) for layer in self._layers]
