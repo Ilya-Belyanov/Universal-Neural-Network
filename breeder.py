@@ -1,7 +1,6 @@
 import numpy as np
-import math
 
-from neuralNetworl import NeuralNetwork
+from neuralNetwork import NeuralNetwork
 from decor import decorTraining
 
 
@@ -32,12 +31,12 @@ class Breeder:
     def training(self, generation, trainingInputs, trainingOutputs, count: int):
 
         for i in range(count):
-            for network in range(len(generation)):
-                result = generation[network].calculate(trainingInputs)
-                generation[network].loss += self.checkLoss(result, trainingOutputs)
+            for network in generation:
+                result = network.calculate(trainingInputs)
+                network.loss = self.checkLoss(result, trainingOutputs)
 
             generation.sort(key=self.loss)
-            generation = generation[:Breeder.countParents]
+            generation = [generation[i] for i in range(Breeder.countParents)]
 
             if i < count - 1:
                 generation = self.mutationGeneration(generation)

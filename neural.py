@@ -5,7 +5,7 @@ from decor import decorFeedForward
 
 class Neural:
     def __init__(self, countInput):
-        self._weights =  (2 * np.random.sample((countInput, 1))) - 1
+        self._weights = (2 * np.random.sample((countInput, 1))) - 1
         self._func = self.sigmoid
 
     @decorFeedForward

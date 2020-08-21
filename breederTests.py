@@ -1,6 +1,6 @@
 import unittest
 
-from neuralNetworl import NeuralNetwork
+from neuralNetwork import NeuralNetwork
 from breeder import Breeder
 
 

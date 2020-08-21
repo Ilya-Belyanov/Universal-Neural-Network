@@ -1,7 +1,6 @@
 import unittest
-import random
 
-from neuralNetworl import *
+from neuralNetwork import *
 
 
 def sigmoid(x):
