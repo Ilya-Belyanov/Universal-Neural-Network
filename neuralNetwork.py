@@ -9,7 +9,15 @@ class NeuralNetwork:
     def __init__(self):
         self._layers = [[]]
         self.setClearNetwork()
-        self.loss = 0
+        self._loss = 0
+
+    @property
+    def loss(self):
+        return self._loss
+
+    @loss.setter
+    def loss(self, ls):
+        self._loss = float('{:.5f}'.format(ls))
 
     def setClearNetwork(self):
         _layerOne = [Neural(1)]
@@ -72,16 +80,8 @@ class NeuralNetwork:
 
     @decorFeedForward
     def calculate(self, inputs):
-        try:
-            m = inputs.shape[1]
-            n = inputs.shape[0]
-        except IndexError:
-            inputs.shape = (1, inputs.shape[0])
-            m = inputs.shape[1]
-            n = inputs.shape[0]
-
-        if m == len(self._layers[0]):
-            return [self.feedForward(inputs[i]) for i in range(n)]
+        if inputs.shape[1] == len(self._layers[0]):
+            return [self.feedForward(inputs[i]) for i in range(inputs.shape[0])]
 
     def feedForward(self, inputs, layer=1):
         result = np.array([neural.feedForward(inputs) for neural in self._layers[layer]]).T
@@ -94,18 +94,18 @@ class NeuralNetwork:
         NN.createStructure(self.structure())
         for l in range(self.layers()):
             for i in range(self.lenLayer(l)):
-                NN.layer(l)[i].setFunctionActivation(self.layer(l)[i].functionActivation())
-                NN.layer(l)[i].weights = np.copy(self.layer(l)[i].weights)
-
+                NN.layer(l)[i] = self.layer(l)[i].copy()
         return NN
 
-    def mutation(self):
-        for l in range(self.layers()):
+    def mutation(self, prob=0.5, k=0.1):
+        for l in range(1, self.layers()):
             for i in range(self.lenLayer(l)):
-                if random.random() < 0.5:
-                    w = np.copy(self.layer(l)[i].weights)
-                    mutantW = ((2 * np.random.sample(w.shape)) - 1) / 10
-                    self.layer(l)[i].weights = np.copy(w + mutantW)
+                weights = np.copy(self.layer(l)[i].weights)
+                mutantW = np.zeros(weights.shape)
+                for w in range(weights.shape[0]):
+                    if random.random() < prob:
+                        mutantW[w][0] = k * (2 * random.random() - 1)
+                self.layer(l)[i].weights = np.copy(weights + mutantW)
 
         return self
 
@@ -113,13 +113,7 @@ class NeuralNetwork:
         return [len(layer) for layer in self._layers]
 
     def weights(self):
-        w = []
-        for layer in self._layers:
-            layerW =[]
-            for neural in layer:
-                layerW.append(neural.weights)
-            w.append(layerW)
-        return w
+        return [[neural.weights for neural in layer] for layer in self._layers]
 
     def layers(self):
         return len(self._layers)

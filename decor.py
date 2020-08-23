@@ -5,6 +5,13 @@ def decorFeedForward(func):
     def wrapper(cls, inputs):
         if type(inputs) == type([]):
             inputs = np.array(inputs)
+
+        try:
+            m = inputs.shape[1]
+            n = inputs.shape[0]
+        except IndexError:
+            inputs.shape = (1, inputs.shape[0])
+
         res = func(cls, inputs)
         return res
 

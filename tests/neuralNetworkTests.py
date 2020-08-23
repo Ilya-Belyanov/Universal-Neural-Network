@@ -3,14 +3,6 @@ import unittest
 from neuralNetwork import *
 
 
-def sigmoid(x):
-    return 1 / (1 + np.exp(-x))
-
-
-def linear(x):
-    return x
-
-
 class NeuralNetworkTest(unittest.TestCase):
     def testNetworkCalculate(self):
         n = NeuralNetwork()
@@ -136,26 +128,6 @@ class NeuralNetworkTest(unittest.TestCase):
         self.assertEqual(n.structure(), [2, 3, 2], "Should be Equal [2, 3, 2]")
         n.addLayer()
         self.assertEqual(n.structure(), [2, 3, 1, 2], "Should be Equal [2, 3, 1, 2]")
-
-    def testNeuralFeedForward(self):
-        sizes = [1, 2, 3, 10, 100]
-        for size in sizes:
-            n = Neural(size)
-            inputs = [random.randint(0, 10) / 10 for i in range(size)]
-            self.assertEqual(n.feedForward(inputs),
-                             sigmoid(sum([inputs[i] * n.weights[i][0] for i in range(len(inputs))])),
-                             "Should be Equal")
-
-    def testNeuralSetFunction(self):
-        sizes = [1, 2, 3, 10, 100]
-        for size in sizes:
-            n = Neural(size)
-            inputs = [random.randint(0, 10) / 10 for i in range(size)]
-            n.setFunctionActivation(n.linear)
-            self.assertEqual(float('{:.7f}'.format(n.feedForward(inputs))),
-                             float('{:.7f}'.format(
-                                 linear(sum([inputs[i] * n.weights[i][0] for i in range(len(inputs))])))),
-                             "Should be Equal")
 
 
 if __name__ == '__main__':
