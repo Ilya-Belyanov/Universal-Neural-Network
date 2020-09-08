@@ -17,7 +17,7 @@ class NeuralNetwork:
 
     @loss.setter
     def loss(self, ls):
-        self._loss = float('{:.5f}'.format(ls))
+        self._loss = float('{:.6f}'.format(ls))
 
     def setClearNetwork(self):
         _layerOne = [Neural(1)]
@@ -96,18 +96,6 @@ class NeuralNetwork:
             for i in range(self.lenLayer(l)):
                 NN.layer(l)[i] = self.layer(l)[i].copy()
         return NN
-
-    def mutation(self, prob=0.5, k=0.1):
-        for l in range(1, self.layers()):
-            for i in range(self.lenLayer(l)):
-                weights = np.copy(self.layer(l)[i].weights)
-                mutantW = np.zeros(weights.shape)
-                for w in range(weights.shape[0]):
-                    if random.random() < prob:
-                        mutantW[w][0] = k * (2 * random.random() - 1)
-                self.layer(l)[i].weights = np.copy(weights + mutantW)
-
-        return self
 
     def structure(self):
         return [len(layer) for layer in self._layers]
