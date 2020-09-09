@@ -2,31 +2,36 @@ import random
 import numpy as np
 
 from neuralNetwork import NeuralNetwork
-from decor import decorTraining
+from src.decor.decorBreeder import decorTraining
 
 
 class Breeder:
     countParents = 10
     countChildren = 3
 
+    @decorTraining
     def evolutionLearn(self, neuralNetwork: NeuralNetwork, trainingInput, trainingOutput, count: int = 100):
+        if trainingInput.shape[1] != neuralNetwork.inputs() or trainingOutput.shape[1] != neuralNetwork.outputs():
+            return None
+
         parents = self.createParent(structure=neuralNetwork.structure())
         firstGeneration = self.mutationGeneration(parents)
         return self.training(firstGeneration, trainingInput, trainingOutput, count)
 
     @staticmethod
     def createParent(structure: list):
-        parents = []
-        for i in range(int(Breeder.countParents/2)):
+        parents = list()
+        halfParents = int(Breeder.countParents/2)
+        for i in range(halfParents):
             NN = NeuralNetwork()
             NN.createStructure(structure)
             parents.append(NN)
 
-        for i in range(Breeder.countParents - int(Breeder.countParents/2)):
+        for i in range(Breeder.countParents - halfParents):
             NN = parents[i].copy()
             for l in range(1, NN.layers()):
-                for n in NN.layer(l):
-                    n.weights = -1 * n.weights
+                for neural in NN.layer(l):
+                    neural.weights = -1 * neural.weights
             parents.append(NN)
         return parents
 
@@ -39,13 +44,12 @@ class Breeder:
                 NN = parents[p].copy()
 
                 for l in range(1, NN.layers()):
-                    for i in range(NN.lenLayer(l)):
-                        weights = np.copy(NN.layer(l)[i].weights)
-                        mutantW = np.zeros(weights.shape)
-                        for w in range(weights.shape[0]):
+                    for neural in NN.layer(l):
+                        mutantW = np.zeros(neural.weights.shape)
+                        for w in range(neural.inputs()):
                             if random.random() < prob:
                                 mutantW[w][0] = k * (2 * random.random() - 1)
-                        NN.layer(l)[i].weights = np.copy(weights + mutantW)
+                        neural.weights = np.copy(neural.weights + mutantW)
 
                 generation.append(NN)
 
@@ -53,20 +57,19 @@ class Breeder:
 
     @staticmethod
     def multiMutationGeneration(parents: list, prob: int = 0.75, k: int = 2):
-        generation = []
+        generation = list()
         for p in range(len(parents)):
 
             for child in range(Breeder.countChildren):
                 NN = parents[p].copy()
 
                 for l in range(1, NN.layers()):
-                    for i in range(NN.lenLayer(l)):
-                        weights = np.copy(NN.layer(l)[i].weights)
-                        mutantW = np.ones(weights.shape)
-                        for w in range(mutantW.shape[0]):
+                    for neural in NN.layer(l):
+                        mutantW = np.ones(neural.weights.shape)
+                        for w in range(neural.inputs()):
                             if random.random() < prob:
                                 mutantW[w][0] = k * (2 * random.random() - 1)
-                        NN.layer(l)[i].weights = np.copy(weights * mutantW)
+                        neural.weights = np.copy(neural.weights * mutantW)
 
                 generation.append(NN)
 
@@ -84,16 +87,16 @@ class Breeder:
 
             for l in range(1, NN.layers()):
                 for i in range(NN.lenLayer(l)):
-                    weights = np.copy(NN.layer(l)[i].weights)
+                    weights = np.copy(NN.neural(l, i).weights)
 
-                    changeW = []
+                    changeW = list()
                     while len(changeW) != int(weights.shape[0]/2):
                         id = random.randint(0, weights.shape[0] - 1)
                         if id not in changeW:
                             changeW.append(id)
 
-                    for w in range(int(weights.shape[0]/2)):
-                        NN.layer(l)[i].weights[changeW[w]][0] = NNCross.layer(l)[i].weights[w][0]
+                    for w in range(len(changeW)):
+                        NN.neural(l, i).weights[changeW[w]][0] = NNCross.neural(l, i).weights[w][0]
             parents.append(NN)
         return parents
 

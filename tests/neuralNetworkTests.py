@@ -1,23 +1,23 @@
 import unittest
+import os
 
 from neuralNetwork import *
+from src.functions import *
 
 
 class NeuralNetworkTest(unittest.TestCase):
-    def testNetworkCalculate(self):
+    def testCalculate(self):
         n = NeuralNetwork()
         n.addInputNeural()
-        n.addLayer(2)
-        n.addNeuralTo(1)
+        n.addInputNeural()
+        n.addLayer()
 
-        self.assertEqual(type(n.calculate(np.array([0, 0]))), type([]),
-                         "Should be Equal")
+        r1 = sigmoid(n.neural(1, 0).weight(0) + n.neural(1, 0).weight(1) + n.neural(1, 0).weight(2))
+        result = sigmoid(r1 * n.neural(2, 0).weight(0))
 
-        self.assertEqual(type(n.calculate(np.array([[0, 1],
-                                                    [1, 0]]))), type([]),
-                         "Should be Equal")
+        self.assertEqual(result, n.calculate([1, 1, 1])[0][0])
 
-    def testNetworkInput(self):
+    def testInput(self):
         n = NeuralNetwork()
         n.addInputNeural()
         n.addLayer()
@@ -48,28 +48,15 @@ class NeuralNetworkTest(unittest.TestCase):
         self.assertEqual(n.calculate([[1]]), None,
                          "Should be None")
 
-    def testNetworkCopy(self):
+    def testCopy(self):
         n = NeuralNetwork()
         n.addInputNeural()
         n.addLayer(2)
         n.addNeuralTo(1)
         n2 = n.copy()
-        wn = n.weights()
-        wn2 = n2.weights()
-        for layer in range(len(wn)):
-            for neural in range(len(wn[layer])):
-                for weight in range(len(wn[layer][neural])):
-                    self.assertEqual(wn[layer][neural][weight], wn2[layer][neural][weight], "Should be Equal")
+        self.assertEqual(n.structure(), n2.structure())
 
-    def testNetworkMutant(self):
-        n = NeuralNetwork()
-        n.addInputNeural()
-        n.addLayer()
-        n2 = n.copy()
-        n.mutation()
-        self.assertEqual(n.structure(), n2.structure(), "Should be Equal")
-
-    def testNetworkChanged(self):
+    def testAdd(self):
         n = NeuralNetwork()
         self.assertTrue(n.addLayer())
         self.assertTrue(n.addLayer())
@@ -79,7 +66,19 @@ class NeuralNetworkTest(unittest.TestCase):
         self.assertTrue(n.addNeuralTo(3))
         self.assertFalse(n.addNeuralTo(4))
 
-    def testNetworkSetStructure(self):
+    def testRemove(self):
+        n = NeuralNetwork()
+        self.assertTrue(n.addLayer())
+        self.assertTrue(n.addLayer())
+        self.assertTrue(n.removeLayer(1, 3))
+        self.assertFalse(n.removeLayer(1, 3))
+
+        self.assertTrue(n.addLayer())
+        self.assertTrue(n.addLayer())
+        self.assertTrue(n.deleteNeuralFrom(1, 0))
+        self.assertFalse(n.removeLayer(1, 0))
+
+    def testSetStructure(self):
         n = NeuralNetwork()
         structure = [1, 1, 1]
         n.createStructure(structure)
@@ -113,7 +112,7 @@ class NeuralNetworkTest(unittest.TestCase):
         structure = [0, -1, 4, 5, 0]
         self.assertFalse(n.createStructure(structure))
 
-    def testNetworkStructure(self):
+    def testStructure(self):
         n = NeuralNetwork()
         self.assertEqual(n.structure(), [1, 1], "Should be Equal [1, 1]")
         n.addLayer()
@@ -128,6 +127,36 @@ class NeuralNetworkTest(unittest.TestCase):
         self.assertEqual(n.structure(), [2, 3, 2], "Should be Equal [2, 3, 2]")
         n.addLayer()
         self.assertEqual(n.structure(), [2, 3, 1, 2], "Should be Equal [2, 3, 1, 2]")
+
+    def testSave(self):
+        n = NeuralNetwork()
+        n.addInputNeural()
+        n.addInputNeural()
+        file = os.getcwd() + '/neural.nn'
+        self.assertTrue(n.save(file))
+
+        with open(file) as f:
+            self.assertEqual(n.weights(), json.load(f))
+        os.remove(file)
+
+        failFile2 = 'dont.txt'
+        self.assertFalse(n.save(failFile2))
+
+    def testLoad(self):
+        n = NeuralNetwork()
+        n.addInputNeural()
+        n.addInputNeural()
+        file = os.getcwd() + '/neural.nn'
+        self.assertTrue(n.save(file))
+
+        n2 = NeuralNetwork(file)
+        self.assertEqual(n2.weights(), n.weights())
+        os.remove(file)
+
+        failFile = 'dont.nn'
+        failFile2 = 'dont.txt'
+        self.assertFalse(n2.load(failFile))
+        self.assertFalse(n2.load(failFile2))
 
 
 if __name__ == '__main__':
