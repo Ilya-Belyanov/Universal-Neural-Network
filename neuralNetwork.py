@@ -96,7 +96,7 @@ class NeuralNetwork:
 
     @decorInput
     def calculate(self, inputs):
-        return [self.feedForward(inputs[i]) for i in range(inputs.shape[0])]
+        return np.array([self.feedForward(inputs[i]) for i in range(inputs.shape[0])])
 
     def feedForward(self, inputs, layer=1):
         result = np.array([neural.feedForward(inputs) for neural in self._layers[layer]]).T

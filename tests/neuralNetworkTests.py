@@ -1,5 +1,4 @@
 import unittest
-import os
 
 from neuralNetwork import *
 from src.functions import *
@@ -22,17 +21,20 @@ class NeuralNetworkTest(unittest.TestCase):
         n.addInputNeural()
         n.addLayer()
 
-        self.assertEqual(n.calculate(np.array([0, 0])), n.calculate([[0, 0]]),
+        self.assertEqual(list(n.calculate(np.array([0, 0]))),
+                         list(n.calculate([[0, 0]])),
                          "Should be Equal")
 
-        self.assertEqual(n.calculate(np.array([1, 1])), n.calculate([1, 1]),
+        self.assertEqual(list(n.calculate(np.array([1, 1]))),
+                         list(n.calculate([1, 1])),
                          "Should be Equal")
 
-        self.assertEqual(n.calculate(np.array([[1, 1]])), n.calculate([[1, 1]]),
+        self.assertEqual(list(n.calculate(np.array([[1, 1]]))),
+                         list(n.calculate([[1, 1]])),
                          "Should be Equal")
 
-        self.assertEqual(n.calculate(np.array([[1, 1], [0, 0]])),
-                         n.calculate([[1, 1], [0, 0]]),
+        self.assertEqual(list(n.calculate(np.array([[1, 1], [0, 0]]))),
+                         list(n.calculate([[1, 1], [0, 0]])),
                          "Should be Equal")
 
         self.assertEqual(n.calculate(np.array([0, 0, 0])), None,
