@@ -2,7 +2,7 @@ import time
 
 from neuralNetwork import *
 from trainers.breeder import Breeder
-from trainers.citron import Citron
+from trainers.perceptron import Perceptron
 
 test = np.array([[0, 0, 1], [1, 1, 1], [1, 0, 1], [0, 1, 1]])
 testOut = np.array([[0], [1], [1], [0]])
@@ -22,15 +22,15 @@ print("Result after= ", nn.calculate(test))
 print("Time work = ", t2 - t1)
 print("Loss = ", nn.loss)
 
-'''
+
 NN = NeuralNetwork()
 NN.addInputNeural()
 NN.addInputNeural()
 
-c = Citron()
+c = Perceptron()
 nn = c.learn(NN, test, testOut, 10000)
 print(nn.calculate(test))
-'''
+
 
 
 
