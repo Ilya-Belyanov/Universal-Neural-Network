@@ -1,7 +1,7 @@
 import unittest
 import random
 
-from neuralNetwork import *
+from neural import *
 from src.functions import sigmoid, linear
 
 

@@ -1,7 +1,7 @@
 import numpy as np
 
 from src.decor.decorNeuralNetwork import decorInput
-from src.functions import sigmoid, linear
+from src.functions import sigmoid
 
 
 class Neural:
@@ -9,6 +9,13 @@ class Neural:
         self._weights = (2 * np.random.sample((countInput, 1))) - 1
         self._bias = 0
         self._func = sigmoid
+
+    def __add__(self, other):
+        """Crossing"""
+        pass
+
+    def __iadd__(self, other):
+        return self + other
 
     @decorInput
     def feedForward(self, inputs):
@@ -20,11 +27,12 @@ class Neural:
         return self._func
 
     def setFunctionActivation(self, func):
-        if type(func) == type(self._func):
+        if callable(func):
             self._func = func
 
     def copy(self):
         n = Neural(self.weights.shape[0])
+        n.bias = self.bias
         n.setFunctionActivation(self._func)
         n.weights = np.copy(self.weights)
         return n

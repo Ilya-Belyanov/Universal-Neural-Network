@@ -25,14 +25,12 @@ class Breeder:
         for i in range(halfParents):
             NN = NeuralNetwork()
             NN.createStructure(structure)
-            parents.append(NN)
-
-        for i in range(Breeder.countParents - halfParents):
-            NN = parents[i].copy()
-            for l in range(1, NN.layers()):
-                for neural in NN.layer(l):
+            NNSim = NN.copy()
+            for l in range(1, len(NNSim.layers)):
+                for neural in NNSim.layers[l]:
                     neural.weights = -1 * neural.weights
             parents.append(NN)
+            parents.append(NNSim)
         return parents
 
     @staticmethod
@@ -43,13 +41,13 @@ class Breeder:
             for child in range(Breeder.countChildren):
                 NN = parents[p].copy()
 
-                for l in range(1, NN.layers()):
-                    for neural in NN.layer(l):
+                for l in range(1, len(NN.layers)):
+                    for neural in NN.layers[l]:
                         mutantW = np.zeros(neural.weights.shape)
                         for w in range(neural.inputs()):
                             if random.random() < prob:
                                 mutantW[w][0] = k * (2 * random.random() - 1)
-                        neural.weights = np.copy(neural.weights + mutantW)
+                        neural.weights += mutantW
 
                 generation.append(NN)
 
@@ -63,8 +61,8 @@ class Breeder:
             for child in range(Breeder.countChildren):
                 NN = parents[p].copy()
 
-                for l in range(1, NN.layers()):
-                    for neural in NN.layer(l):
+                for l in range(1, len(NN.layers)):
+                    for neural in NN.layers[l]:
                         mutantW = np.ones(neural.weights.shape)
                         for w in range(neural.inputs()):
                             if random.random() < prob:
@@ -85,9 +83,9 @@ class Breeder:
                 index = random.randint(0, len(parents) - 1)
             NNCross = parents[index]
 
-            for l in range(1, NN.layers()):
-                for i in range(NN.lenLayer(l)):
-                    weights = np.copy(NN.neural(l, i).weights)
+            for l in range(1, len(NN.layers)):
+                for i in range(len(NN.layers[l])):
+                    weights = np.copy(NN.layers.neural(l, i).weights)
 
                     changeW = list()
                     while len(changeW) != int(weights.shape[0]/2):
@@ -96,7 +94,7 @@ class Breeder:
                             changeW.append(id)
 
                     for w in range(len(changeW)):
-                        NN.neural(l, i).weights[changeW[w]][0] = NNCross.neural(l, i).weights[w][0]
+                        NN.layers.neural(l, i).weights[changeW[w]][0] = NNCross.layers.neural(l, i).weights[w][0]
             parents.append(NN)
         return parents
 

@@ -10,8 +10,8 @@ class BreederTest(unittest.TestCase):
 
     def testNetworkCalculate(self):
         NN = NeuralNetwork()
-        NN.addInputNeural()
-        NN.addInputNeural()
+        NN.layers.addInputNeural()
+        NN.layers.addInputNeural()
 
         nn = self.breeder.evolutionLearn(NN, [[0, 0, 1]], [[0]], 10)
         self.assertEqual(round(nn.calculate([[0, 0, 1]])[0][0]), 0)

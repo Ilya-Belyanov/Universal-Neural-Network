@@ -7,19 +7,19 @@ from src.functions import *
 class NeuralNetworkTest(unittest.TestCase):
     def testCalculate(self):
         n = NeuralNetwork()
-        n.addInputNeural()
-        n.addInputNeural()
-        n.addLayer()
+        n.layers.addInputNeural()
+        n.layers.addInputNeural()
+        n.layers.addLayers()
 
-        r1 = sigmoid(n.neural(1, 0).weight(0) + n.neural(1, 0).weight(1) + n.neural(1, 0).weight(2))
-        result = sigmoid(r1 * n.neural(2, 0).weight(0))
+        r1 = sigmoid(n.layers.neural(1, 0).weight(0) + n.layers.neural(1, 0).weight(1) + n.layers.neural(1, 0).weight(2))
+        result = sigmoid(r1 * n.layers.neural(2, 0).weight(0))
 
         self.assertEqual(result, n.calculate([1, 1, 1])[0][0])
 
     def testInput(self):
         n = NeuralNetwork()
-        n.addInputNeural()
-        n.addLayer()
+        n.layers.addInputNeural()
+        n.layers.addLayers()
 
         self.assertEqual(list(n.calculate(np.array([0, 0]))),
                          list(n.calculate([[0, 0]])),
@@ -52,33 +52,32 @@ class NeuralNetworkTest(unittest.TestCase):
 
     def testCopy(self):
         n = NeuralNetwork()
-        n.addInputNeural()
-        n.addLayer(2)
-        n.addNeuralTo(1)
+        n.layers.addInputNeural()
+        n.layers.addLayers(2)
+        n.layers.addNeural(1)
         n2 = n.copy()
         self.assertEqual(n.structure(), n2.structure())
 
     def testAdd(self):
         n = NeuralNetwork()
-        self.assertTrue(n.addLayer())
-        self.assertTrue(n.addLayer())
-        self.assertTrue(n.addNeuralTo(0))
-        self.assertTrue(n.addNeuralTo(1))
-        self.assertTrue(n.addNeuralTo(2))
-        self.assertTrue(n.addNeuralTo(3))
-        self.assertFalse(n.addNeuralTo(4))
+        self.assertTrue(n.layers.addLayers())
+        self.assertTrue(n.layers.addLayers())
+        self.assertTrue(n.layers.addNeural(0))
+        self.assertTrue(n.layers.addNeural(1))
+        self.assertTrue(n.layers.addNeural(2))
+        self.assertTrue(n.layers.addNeural(3))
+        self.assertFalse(n.layers.addNeural(4))
 
     def testRemove(self):
         n = NeuralNetwork()
-        self.assertTrue(n.addLayer())
-        self.assertTrue(n.addLayer())
-        self.assertTrue(n.removeLayer(1, 3))
-        self.assertFalse(n.removeLayer(1, 3))
+        self.assertTrue(n.layers.addLayers())
+        self.assertTrue(n.layers.addLayers())
 
-        self.assertTrue(n.addLayer())
-        self.assertTrue(n.addLayer())
-        self.assertTrue(n.deleteNeuralFrom(1, 0))
-        self.assertFalse(n.removeLayer(1, 0))
+        self.assertTrue(n.layers.removeLayer(1))
+        self.assertFalse(n.layers.removeLayer(4))
+
+        self.assertTrue(n.layers.deleteNeural(1, 0))
+        self.assertFalse(n.layers.deleteNeural(6, 0))
 
     def testSetStructure(self):
         n = NeuralNetwork()
@@ -117,23 +116,23 @@ class NeuralNetworkTest(unittest.TestCase):
     def testStructure(self):
         n = NeuralNetwork()
         self.assertEqual(n.structure(), [1, 1], "Should be Equal [1, 1]")
-        n.addLayer()
+        n.layers.addLayers()
         self.assertEqual(n.structure(), [1, 1, 1], "Should be Equal [1, 1, 1]")
-        n.addNeuralTo(1)
+        n.layers.addNeural(1)
         self.assertEqual(n.structure(), [1, 2, 1], "Should be Equal [1, 2, 1]")
-        n.addNeuralTo(1)
+        n.layers.addNeural(1)
         self.assertEqual(n.structure(), [1, 3, 1], "Should be Equal [1, 3, 1]")
-        n.addInputNeural()
+        n.layers.addInputNeural()
         self.assertEqual(n.structure(), [2, 3, 1], "Should be Equal [2, 3, 1]")
-        n.addOutputNeural()
+        n.layers.addOutputNeural()
         self.assertEqual(n.structure(), [2, 3, 2], "Should be Equal [2, 3, 2]")
-        n.addLayer()
+        n.layers.addLayers()
         self.assertEqual(n.structure(), [2, 3, 1, 2], "Should be Equal [2, 3, 1, 2]")
 
     def testSave(self):
         n = NeuralNetwork()
-        n.addInputNeural()
-        n.addInputNeural()
+        n.layers.addInputNeural()
+        n.layers.addInputNeural()
         file = os.getcwd() + '/neural.nn'
         self.assertTrue(n.save(file))
 
@@ -146,8 +145,8 @@ class NeuralNetworkTest(unittest.TestCase):
 
     def testLoad(self):
         n = NeuralNetwork()
-        n.addInputNeural()
-        n.addInputNeural()
+        n.layers.addInputNeural()
+        n.layers.addInputNeural()
         file = os.getcwd() + '/neural.nn'
         self.assertTrue(n.save(file))
 
