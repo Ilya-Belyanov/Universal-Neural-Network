@@ -1,7 +1,7 @@
 import numpy as np
 
-from src.decor.decorNeuralNetwork import decorInput
-from src.functions import sigmoid
+from ..decor.decorNeuralNetwork import decorInput
+from ..core.functions import sigmoid
 
 
 class Neural:

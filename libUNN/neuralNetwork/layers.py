@@ -1,5 +1,5 @@
-from neural import Neural
-from src.decor.decorLayers import *
+from ..neuralNetwork.neural import Neural
+from ..decor.decorLayers import *
 
 
 class LayersIterator:
@@ -102,7 +102,7 @@ class Layers:
         if layer < len(self._layers):
             _inputs = len(self._layers[layer - 1])
             _countNeural = len(self._layers[layer])
-            self._layers[layer] = [Neural(_inputs) for i in range(_countNeural)]
+            self._layers[layer] = [Neural(_inputs) for _ in range(_countNeural)]
 
     def copy(self):
         layers = Layers()

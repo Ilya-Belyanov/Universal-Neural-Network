@@ -1,8 +1,8 @@
 import random
 import numpy as np
 
-from neuralNetwork import NeuralNetwork
-from src.decor.decorBreeder import decorTraining
+from ..neuralNetwork.neuralNetwork import NeuralNetwork
+from ..decor.decorBreeder import decorTraining
 
 
 class Breeder:

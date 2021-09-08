@@ -1,7 +1,7 @@
 import unittest
 
-from neuralNetwork import NeuralNetwork
-from trainers.breeder import Breeder
+from libUNN.neuralNetwork.neuralNetwork import NeuralNetwork
+from libUNN.trainers.breeder import Breeder
 
 
 class BreederTest(unittest.TestCase):

@@ -1,7 +1,7 @@
 import unittest
 
-from neuralNetwork import *
-from src.functions import *
+from libUNN.neuralNetwork.neuralNetwork import *
+from libUNN.core.functions import *
 
 
 class NeuralNetworkTest(unittest.TestCase):

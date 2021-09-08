@@ -1,7 +1,7 @@
 import json
 
-from layers import Layers
-from src.decor.decorNeuralNetwork import *
+from ..neuralNetwork.layers import Layers
+from ..decor.decorNeuralNetwork import *
 
 
 class NeuralNetwork:

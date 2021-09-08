@@ -1,9 +1,12 @@
 import numpy as np
 
-from neuralNetwork import NeuralNetwork
+from src.odj.neuralNetwork import NeuralNetwork
+from src.decor.decorBreeder import decorTraining
 
 
 class Perceptron2L:
+
+    @decorTraining
     def learn(self, neuralNetwork: NeuralNetwork, trainingInput, trainingOutput, count: int = 100):
         if len(neuralNetwork.layers) != 2 or neuralNetwork.layers.lenLayer(1) != 1:
             return None

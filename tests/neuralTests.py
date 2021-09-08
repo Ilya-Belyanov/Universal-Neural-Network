@@ -1,8 +1,8 @@
 import unittest
 import random
 
-from neural import *
-from src.functions import sigmoid, linear
+from libUNN.neuralNetwork.neural import *
+from libUNN.core.functions import sigmoid, linear
 
 
 class NeuralTest(unittest.TestCase):
